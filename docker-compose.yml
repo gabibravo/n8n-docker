@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
 
   n8n:
-    image: n8nio/n8n:latest
+    image: n8nio/n8n:latest-alpine
     container_name: n8n
     depends_on:
       postgres:
