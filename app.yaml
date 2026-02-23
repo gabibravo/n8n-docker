@@ -1,0 +1,31 @@
+name: n8n-automation
+services:
+- name: n8n
+  github:
+    repo: TU_USUARIO/n8n-docker  # Cambiar por tu repositorio
+    branch: main
+  build_command: docker-compose build
+  run_command: docker-compose up -d
+  dockerfile_path: Dockerfile
+  health_check:
+    http_path: /healthz
+  http_port: 5678
+  envs:
+  - key: DB_USER
+    scope: RUN_AND_BUILD_TIME
+    value: n8n
+  - key: DB_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    value: ${DB_PASSWORD}
+  - key: N8N_USER
+    scope: RUN_AND_BUILD_TIME
+    value: admin
+  - key: N8N_PASSWORD
+    scope: RUN_AND_BUILD_TIME
+    value: ${N8N_PASSWORD}
+  - key: N8N_HOST
+    scope: RUN_TIME
+    value: ${N8N_HOST}
+  - key: WEBHOOK_URL
+    scope: RUN_TIME
+    value: ${WEBHOOK_URL}

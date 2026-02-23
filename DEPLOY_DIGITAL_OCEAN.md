@@ -2,6 +2,40 @@
 
 Guía paso a paso para desplegar n8n en Digital Ocean.
 
+## ⚠️ PROBLEMA: "No components detected"
+
+Si al agregar el repositorio en Digital Ocean obtienes este error:
+
+```
+No components detected: Here are some things to check:
+- Verify the repo contains supported file types
+- If your app isn't in the root, enter the source directory
+```
+
+### SOLUCIÓN: Usar el Dockerfile incluido
+
+El proyecto incluye un `Dockerfile` en la raíz que Digital Ocean detectará automáticamente si:
+
+1. **Asegúrate de que el archivo existe:**
+   ```bash
+   git add Dockerfile .dockerignore app.yaml
+   git commit -m "Add Docker configuration for Digital Ocean"
+   git push origin main
+   ```
+
+2. **En Digital Ocean App Platform:**
+   - Vuelve a desconectar y conectar el repositorio
+   - O espera a que se refresque automáticamente
+   - Digital Ocean debería detectar `Dockerfile` como tipo de construcción
+
+3. **Si aún no detecta:**
+   - Click en "Edit" → "Builder"
+   - Cambia a: **"Dockerfile"**
+   - Ruta del Dockerfile: `./Dockerfile`
+   - Puerto HTTP: `5678`
+
+---
+
 ## Opción 1: App Platform (Más Fácil ⭐ Recomendado)
 
 ### Ventajas
@@ -49,9 +83,12 @@ git push -u origin main
    - Branch: `main`
 
 2. **Configurar Builder**
-   - Type: Dockerfile
-   - Source: `Dockerfile` (si existe) O seleccionar "Buildpack"
-   - Puerto HTTP: 5678
+   - Type: **Dockerfile** (debe seleccionar esto explícitamente)
+   - Source: `./Dockerfile` (ruta del archivo)
+   - Dockerfile path: `Dockerfile`
+   - Build context: `/` (raíz del repositorio)
+   - Puerto HTTP: `5678`
+   - **Importante**: Asegúrate de que "Dockerfile" esté seleccionado, NO "Buildpack"
 
 3. **Configurar Variablesde Entorno**
    ```
